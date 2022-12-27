@@ -124,3 +124,15 @@ document.querySelector(`.operations__content--${clicked.dataset.tab}`).classList
 nav.addEventListener('mouseover', e => handleHover(e, 0.5));
 
 nav.addEventListener('mouseout', e => handleHover(e, 1));
+
+// Sticky navigation
+
+const initialCoords = section1.getBoundingClientRect();
+
+window.addEventListener('scroll', function (e) {
+  if(window.scrollY > initialCoords.top) {
+    nav.classList.add('sticky');
+  } else {
+    nav.classList.remove('sticky');
+  }
+});
