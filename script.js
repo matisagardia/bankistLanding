@@ -12,7 +12,7 @@ const section1 = document.querySelector('#section--1');
 const tabs = document.querySelectorAll('.operations__tab');
 const tabsContainer = document.querySelector('.operations__tab-container');
 const tabsContent = document.querySelectorAll('.operations__content');
-
+const nav = document.querySelector('.nav');
 
 
 
@@ -87,20 +87,40 @@ tabsContainer.addEventListener('click', function(e) {
 
 // below, if we select e.target, it is okay but when clicking the buttons there is a span element, which is the number
 // we don't want to receive that span element, so, by passing  closest to the method, we select the closest parent with that name only.
-  const clicked = e.target.closest('.operations__tab');
+const clicked = e.target.closest('.operations__tab');
 
   // Guard clause. This is for the case that we click on the parent element instead of the buttons, because it will return NULL as it does not have
   // any parent.
-  if(!clicked) return;
+if(!clicked) return;
 
   // we remove the active class in all of the buttons and then we add it to the clicked button.
-  tabs.forEach(t => t.classList.remove('operations__tab--active'));
-  clicked.classList.add('operations__tab--active');
+tabs.forEach(t => t.classList.remove('operations__tab--active'));
+clicked.classList.add('operations__tab--active');
 
   // Activate content area
-  tabsContent.forEach(t => t.classList.remove('operations__content--active'));
-  document.querySelector(`.operations__content--${clicked.dataset.tab}`).classList.add('operations__content--active');
-})
+tabsContent.forEach(t => t.classList.remove('operations__content--active'));
+document.querySelector(`.operations__content--${clicked.dataset.tab}`).classList.add('operations__content--active');
+});
 
 
+  // Menu fade animation
 
+  const handleHover = function(e, opacity) {
+    if(e.target.classList.contains('nav__link')) {
+
+      const link = e.target;
+      const siblings = link.closest('.nav').querySelectorAll('.nav__link');
+      const logo = link.closest('.nav').querySelector('img');
+
+      siblings.forEach(s => {
+        if(s !== link) s.style.opacity = opacity;
+      });
+      logo.style.opacity = opacity;
+    }
+  };
+
+  // Passing an argument to an event handler function
+
+nav.addEventListener('mouseover', e => handleHover(e, 0.5));
+
+nav.addEventListener('mouseout', e => handleHover(e, 1));
