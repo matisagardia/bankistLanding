@@ -13,6 +13,7 @@ const tabs = document.querySelectorAll('.operations__tab');
 const tabsContainer = document.querySelector('.operations__tab-container');
 const tabsContent = document.querySelectorAll('.operations__content');
 const nav = document.querySelector('.nav');
+const header = document.querySelector('.header');
 
 
 
@@ -127,7 +128,6 @@ nav.addEventListener('mouseout', e => handleHover(e, 1));
 
 // Sticky navigation
 
-const header = document.querySelector('.header');
 const navHeight = nav.getBoundingClientRect().height;
 
 
@@ -144,3 +144,55 @@ const headerObserver = new IntersectionObserver(stickyNav, {
 });
 
 headerObserver.observe(header);
+
+// Reveal sections
+
+const allSections = document.querySelectorAll('.section');
+
+const revealSection = function (entries, observer) {
+  const [entry] = entries;
+
+  if(!entry.isIntersecting) return;
+
+  entry.target.classList.remove('section--hidden');
+}
+
+const sectionObserver = new IntersectionObserver(revealSection, {
+  root: null,
+  threshold: 0.15
+})
+
+allSections.forEach(function(section) {
+  sectionObserver.observe(section);
+  section.classList.add('section--hidden');
+})
+
+// Lazy loading images
+
+const imgTargets = document.querySelectorAll('img[data-src]');
+
+const loadImage = function(entries, observer) {
+  const [entry] = entries;
+
+  if(!entry.isIntersecting) return;
+
+  // replace the src which is the bad quality img for the dataset src that contains the correct img
+
+  entry.target.src = entry.target.dataset.src;
+
+  // when the image is loading, then remove the previous img
+
+  entry.target.addEventListener('load', function() {
+    entry.target.classList.remove('lazy-img');
+  });
+
+  observer.unobserve(entry.target);
+};
+
+const imgObserver = new IntersectionObserver(loadImage, {
+  root: null,
+  threshold: 0,
+  rootMargin: '200px'
+});
+
+imgTargets.forEach(img => imgObserver.observe(img));
