@@ -205,6 +205,8 @@ const btnLeft = document.querySelector('.slider__btn--left');
 
 const btnRight = document.querySelector('.slider__btn--right');
 
+const dotContainer = document.querySelector('.dots');
+
 const maxSlide = slides.length - 1;
 
 
@@ -212,8 +214,11 @@ let curSlide = 0;
 
 // Initially the slides are one above the other, so we need to separate them side by side
 
-slides.forEach((s, i) => s.style.transform = `translateX(${100 * i}%)`);
+const goToSlide = function(slide) {
+  slides.forEach((s, i) => s.style.transform = `translateX(${100 * (i - slide)}%)`);
+}
 
+goToSlide(0);
 
 // moving to the right slide
 
@@ -223,7 +228,8 @@ btnRight.addEventListener('click', function() {
   } else {
   curSlide++;
   }
-  slides.forEach((s, i) => s.style.transform = `translateX(${100 * (i - curSlide)}%)`);
+  goToSlide(curSlide);
+  activateDot(curSlide);
 })
 
 // moving to the left slide
@@ -234,5 +240,31 @@ btnLeft.addEventListener('click', function() {
     } else {
       curSlide--;
     }
-  slides.forEach((s, i) => s.style.transform = `translateX(${100 * (i - curSlide)}%)`);
+  goToSlide(curSlide);
+  activateDot(curSlide);
 })
+
+// adding the dots below the slides
+
+const createDots = function() {
+  slides.forEach(function (_, i) {
+    dotContainer.insertAdjacentHTML('beforeend', `<button class ="dots__dot" data-slide="${i}"></button>`)
+  })
+};
+
+createDots();
+
+dotContainer.addEventListener('click', function(e) {
+  if(e.target.classList.contains('dots__dot')) {
+    const slide = e.target.dataset.slide;
+    goToSlide(slide);
+    activateDot(slide);
+  }
+});
+
+const activateDot = function(slide) {
+  document.querySelectorAll('.dots__dot').forEach(dot => dot.classList.remove('dots__dot--active'));
+  document.querySelector(`.dots__dot[data-slide="${slide}"]`).classList.add('dots__dot--active');
+}
+
+activateDot(0);
