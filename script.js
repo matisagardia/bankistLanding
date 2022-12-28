@@ -196,3 +196,43 @@ const imgObserver = new IntersectionObserver(loadImage, {
 });
 
 imgTargets.forEach(img => imgObserver.observe(img));
+
+// Slider
+
+const slides = document.querySelectorAll('.slide');
+
+const btnLeft = document.querySelector('.slider__btn--left');
+
+const btnRight = document.querySelector('.slider__btn--right');
+
+const maxSlide = slides.length - 1;
+
+
+let curSlide = 0;
+
+// Initially the slides are one above the other, so we need to separate them side by side
+
+slides.forEach((s, i) => s.style.transform = `translateX(${100 * i}%)`);
+
+
+// moving to the right slide
+
+btnRight.addEventListener('click', function() {
+  if(curSlide === maxSlide) {
+    curSlide = 0;
+  } else {
+  curSlide++;
+  }
+  slides.forEach((s, i) => s.style.transform = `translateX(${100 * (i - curSlide)}%)`);
+})
+
+// moving to the left slide
+
+btnLeft.addEventListener('click', function() {
+    if(curSlide === 0) {
+      curSlide = maxSlide;
+    } else {
+      curSlide--;
+    }
+  slides.forEach((s, i) => s.style.transform = `translateX(${100 * (i - curSlide)}%)`);
+})
